@@ -207,6 +207,10 @@ class Brushes():
         primary_brush = self.primary_brush
         derived_brushes = self.derived_brushes
 
+        # Clear any existing data from the color maps.
+        for brush in [primary_brush] + derived_brushes:
+            brush.color_map = dict()
+
         # With multiple brushes, brush volumes can overlap, and one or more
         # indices may have multiple falloff values associated with it.
         if derived_brushes:
