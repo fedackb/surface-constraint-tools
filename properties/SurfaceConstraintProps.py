@@ -86,7 +86,7 @@ class SurfaceConstraintProps(bpy.types.PropertyGroup):
         modifier_uid = self.modifier_uid
         if active_object and modifier_uid:
             modifier_uid_map = {
-                modifier.as_pointer() : modifier
+                str(modifier.as_pointer()) : modifier
                 for modifier in active_object.modifiers
             }
             if modifier_uid in modifier_uid_map:
@@ -153,9 +153,9 @@ class SurfaceConstraintProps(bpy.types.PropertyGroup):
         {'CLOSEST_POINT' : 'NEAREST_SURFACEPOINT', 'VERTEX_NORMAL' : 'PROJECT'}
 
     # Unique Identifiers
-    mesh_object_uid = bpy.props.IntProperty()
-    modifier_uid = bpy.props.IntProperty()
-    operator_uid = bpy.props.IntProperty()
+    mesh_object_uid = bpy.props.StringProperty()
+    modifier_uid = bpy.props.StringProperty()
+    operator_uid = bpy.props.StringProperty()
 
     # UI Visibility
     settings_ui_is_visible = bpy.props.BoolProperty(

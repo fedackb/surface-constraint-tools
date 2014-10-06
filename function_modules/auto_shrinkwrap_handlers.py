@@ -67,21 +67,21 @@ def scene_update_pre(scene):
         props.modifier_uid and (
             not active_object or
             active_object.mode != 'EDIT' or
-            active_object.as_pointer() != props.mesh_object_uid or
+            str(active_object.as_pointer()) != props.mesh_object_uid or
             not target or
             target == active_object.name
         )
     ):
         # Attempt to find the referenced mesh object.
         object_uid_map = {
-            object_.as_pointer() : object_ for object_ in bpy.data.objects
+            str(object_.as_pointer()) : object_ for object_ in bpy.data.objects
         }
         if props.mesh_object_uid in object_uid_map:
             referenced_object = object_uid_map[props.mesh_object_uid]
 
             # Attempt to remove the referenced modifier.
             modifier_uid_map = {
-                modifier.as_pointer() : modifier
+                str(modifier.as_pointer()) : modifier
                 for modifier in referenced_object.modifiers
             }
             if props.modifier_uid in modifier_uid_map:
@@ -90,8 +90,8 @@ def scene_update_pre(scene):
                 )
 
         # Clear the unique identifiers.
-        props.mesh_object_uid = 0
-        props.modifier_uid = 0
+        props.mesh_object_uid = ""
+        props.modifier_uid = ""
 
     # Ensure that an appropriate shrinkwrap modifier exists on the active
     # object, provided that all of the following criteria are satisfied:
@@ -112,13 +112,13 @@ def scene_update_pre(scene):
 
         # Record a unique identifier for the active mesh object, if necessary.
         if not props.mesh_object_uid:
-            props.mesh_object_uid = active_object.as_pointer()
+            props.mesh_object_uid = str(active_object.as_pointer())
 
         # If a reference to the modifier exists, create a mapping between
         # unique identifiers and the active object's modifiers.
         if props.modifier_uid:
             modifier_uid_map = {
-                modifier.as_pointer() : modifier
+                str(modifier.as_pointer()) : modifier
                 for modifier in active_object.modifiers
             }
 
@@ -148,7 +148,7 @@ def scene_update_pre(scene):
                 bpy.ops.object.modifier_move_up(modifier = modifier.name)
 
             # Record a unique identifier for the modifier.
-            props.modifier_uid = modifier.as_pointer()
+            props.modifier_uid = str(modifier.as_pointer())
 
         # Otherwise, validate the existing, referenced modifier.
         else:
@@ -190,7 +190,7 @@ def scene_update_pre(scene):
         # has finished.
         if (
             active_operator and
-            active_operator.as_pointer() != props.operator_uid
+            str(active_operator.as_pointer()) != props.operator_uid
         ):
             # Apply the modifier.
             bpy.ops.object.mode_set(mode = 'OBJECT')
@@ -199,7 +199,7 @@ def scene_update_pre(scene):
 
             # Record a unique identifier for the most recently finished
             # operator.
-            props.operator_uid = active_operator.as_pointer()
+            props.operator_uid = str(active_operator.as_pointer())
 
     # Resume the event handling.
     props.auto_shrinkwrap_is_paused = False
