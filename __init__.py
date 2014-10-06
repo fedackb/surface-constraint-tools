@@ -26,7 +26,7 @@ bl_info = {
     "location" : "3D View > Tool Shelf > Surface Constraint Tools",
     "author" : "Brett Fedack",
     "version" : (1, 0),
-    "blender" : (2, 71, 0),
+    "blender" : (2, 72, 0),
     "category" : "3D View"
 }
 
