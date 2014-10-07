@@ -58,14 +58,6 @@ class RayCaster():
         )
         ray_direction.normalize()
 
-        # For orthographic projections, the ray's direction needs to be to be
-        # inverted to point into the scene.
-        if rv3d.view_perspective == 'ORTHO' or (
-               rv3d.view_perspective == 'CAMERA' and
-               sv3d.camera.data.type == 'ORTHO'
-           ):
-            ray_direction *= -1
-
         # Determine the ray's origin in world space.
         ray_origin =\
             view3d_utils.region_2d_to_origin_3d(region, rv3d, region_co)
