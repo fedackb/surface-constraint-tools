@@ -109,7 +109,7 @@ class PickSurfaceConstraint(bpy.types.Operator):
 
             # Determine the square of the distance in world space from the
             # mouse cursor to the point of intersection.
-            if location:
+            if face_index != -1:
                 distance_squared = (location - ray_origin).length_squared 
 
                 # Compare this distance with that of any previously determined

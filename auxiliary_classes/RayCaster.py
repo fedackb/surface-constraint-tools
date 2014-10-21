@@ -130,23 +130,13 @@ class RayCaster():
         location, normal, face_index =\
             mesh_object.ray_cast(ray_origin, ray_target)
 
-        # If no intersection occurred, return a tuple in the form of
-        # (None, None, -1).
-        if face_index == -1:
-            return (None, None, -1)
-
-        # Otherwise, if an intersection occurred, return a tuple containing the
-        # intersection information in the specified coordinate system.
-        else:
-            # Convert the object space intersection information to world space,
-            # if necessary.
-            if self.coordinate_system == 'WORLD':
-                model_matrix = mesh_object.matrix_world
-                for co in location, normal:
-                    co.xyz = model_matrix * co
-                normal = (normal - mesh_object.location).normalized()
-
-            return (location, normal, face_index)
+        # Convert the object space intersection information to world space, if
+        # necessary.
+        if self.coordinate_system == 'WORLD':
+            model_matrix = mesh_object.matrix_world
+            for co in location, normal:
+                co.xyz = model_matrix * co
+            normal = (normal - mesh_object.location).normalized()
 
         # Return the intersection information.
         return (location, normal, face_index)

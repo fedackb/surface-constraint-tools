@@ -261,7 +261,7 @@ class Brushes():
 
         # Indicate that the primary brush is not on the mesh if no intersection
         # occurred.
-        if not location:
+        if face_index == -1:
             primary_brush.is_on_mesh = False
 
         # Otherwise, if an intersection occurred, determine if it is valid.
