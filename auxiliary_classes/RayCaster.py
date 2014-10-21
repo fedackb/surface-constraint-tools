@@ -58,6 +58,15 @@ class RayCaster():
         )
         ray_direction.normalize()
 
+        # For orthographic projections in Blender versions prior to 2.72, the
+        # ray's direction needs to be inverted to point into the scene.
+        if bpy.app.version < (2, 72, 0):
+            if rv3d.view_perspective == 'ORTHO' or (
+                   rv3d.view_perspective == 'CAMERA' and
+                   sv3d.camera.data.type == 'ORTHO'
+               ):
+                ray_direction *= -1
+
         # Determine the ray's origin in world space.
         ray_origin =\
             view3d_utils.region_2d_to_origin_3d(region, rv3d, region_co)
@@ -70,7 +79,7 @@ class RayCaster():
         # origin a sufficient distance antiparallel to the ray's direction to
         # ensure that the ray's origin is in front of the mesh object.
         if rv3d.view_perspective == 'ORTHO':
-            ray_origin -= 100000 * ray_direction
+            ray_origin -= 10000 * ray_direction
 
         # Otherwise, if the view is a perspective projection or projected from
         # a camera then advance the ray's origin to the near clipping plane.
@@ -80,9 +89,9 @@ class RayCaster():
         # Convert the ray's origin and target from world space to object space,
         # if necessary.
         if self.coordinate_system == 'OBJECT':
-            inverted_model_matrix = mesh_object.matrix_world.inverted()
+            inverse_model_matrix = mesh_object.matrix_world.inverted()
             for co in ray_origin, ray_target:
-                co.xyz = inverted_model_matrix * co
+                co.xyz = inverse_model_matrix * co
 
         # Set the ray caster object's ray attributes.
         self.ray_origin = ray_origin
@@ -138,3 +147,6 @@ class RayCaster():
                 normal = (normal - mesh_object.location).normalized()
 
             return (location, normal, face_index)
+
+        # Return the intersection information.
+        return (location, normal, face_index)
